@@ -279,8 +279,9 @@ class HeatingController:
         if inside is None and climate:
             inside = _float(self.hass, climate, "current_temperature")
         target = _float(self.hass, climate, "temperature") if climate else None
-        if target is None:
-            target = room["target_temp"]
+        if target is None and not climate:
+            # Raum ohne Heizung: eigener Referenzwert oder Standard aus der Fensterlogik
+            target = room["target_temp"] if room["target_temp"] is not None else self.data["params"]["target_without_heating"]
         return {
             "inside": inside,
             "target": target,

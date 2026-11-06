@@ -288,7 +288,11 @@ class SmartifyHeatingCard extends HTMLElement {
     const climateId = this._climate(room);
     const cl = this._st(climateId);
     const inside = this._inside(room);
-    const target = this._pending[climateId] ?? shcNum(cl?.attributes?.temperature) ?? room.target_temp;
+    const heated = !!room.climate;
+    // Ohne Heizung: Referenzwert aus dem Empfehlungssensor (Raumwert oder Standard)
+    const target = heated
+      ? (this._pending[climateId] ?? shcNum(cl?.attributes?.temperature))
+      : shcNum(this._st(ents.recommendation)?.attributes?.soll) ?? room.target_temp;
     const action = cl?.attributes?.hvac_action || (cl?.state === 'off' ? 'off' : '');
     const modeSt = this._st(ents.mode);
     const mode = modeSt?.state;
@@ -311,7 +315,7 @@ class SmartifyHeatingCard extends HTMLElement {
 
     const sub = [
       `${shcFmt(inside, lang)} °C`,
-      target !== null && target !== undefined ? `Soll ${shcFmt(target, lang)}` : '',
+      target !== null && target !== undefined ? `${heated ? 'Soll' : 'Ref.'} ${shcFmt(target, lang)}` : '',
       collapsed ? statusText : '',
     ].filter(Boolean).join(' · ');
 
@@ -710,6 +714,7 @@ class SmartifyHeatingCardEditor extends HTMLElement {
     num('Max. Lüftungsdauer (min, 0 = aus)', 'max_vent_min', 'Standard 15. Gilt nur im Heizbetrieb.');
     num('Pause nach Lüften (min)', 'cooldown_min', 'Standard 30. Danach erst wieder Öffnen-Empfehlung.');
     num('Mindest-Haltezeit (min)', 'hold_min', 'Standard 5. Verhindert Flattern bei geschlossenem Fenster.');
+    num('Referenz für Räume ohne Heizung (°C)', 'target_without_heating', 'Standard 20. Gilt, wenn im Raum kein eigener Referenzwert gesetzt ist.');
     num('Fensterabschaltung nach (s)', 'shutdown_delay_s', 'Standard 60. Nur Modus Auto: Thermostat aus, solange ein Kontakt offen ist.');
     num('Wiedereinschalten nach (s)', 'restore_delay_s', 'Standard 30 nach dem Schließen aller Kontakte.');
 
@@ -759,15 +764,16 @@ class SmartifyHeatingCardEditor extends HTMLElement {
     this._input(body, 'Name', room.name, (v) => { room.name = v; head.querySelector('b').textContent = v; this._markDirty(); });
     this._input(body, 'Kürzel für Entity-IDs', room.slug, set('slug'), 'text',
       'z. B. „buro“ → sensor.buro_fenster_empfehlung. Leer = aus dem Namen.');
-    this._entity(body, 'Thermostat', room.climate, [{ domain: 'climate' }], set('climate'));
+    this._entity(body, 'Thermostat', room.climate, [{ domain: 'climate' }], set('climate'), false,
+      'Leer = Raum ohne Heizung: nur Fensterempfehlung, kein Modus, keine Sollwert-Bedienung.');
     this._entity(body, 'Kühl-Thermostat (optional)', room.climate_cooling, [{ domain: 'climate' }], set('climate_cooling'));
     this._entity(body, 'Raumtemperatur (optional)', room.temperature_sensor, [{ domain: 'sensor', device_class: 'temperature' }, { domain: 'sensor' }],
       set('temperature_sensor'), false, 'Leer = Ist-Temperatur des Thermostats.');
     this._entity(body, 'Fenster-/Türkontakte', room.windows, [{ domain: 'binary_sensor' }],
       (v) => { room.windows = v; head.querySelector('small').textContent = `${v.length} Kontakt(e)`; this._markDirty(); }, true,
       'Mehrere möglich. Offen, sobald ein Kontakt offen ist. Ohne Kontakt keine Fensterempfehlung.');
-    this._input(body, 'Soll-Temperatur ohne Thermostat (°C)', room.target_temp, set('target_temp'), 'number',
-      'Nur für Räume ohne Thermostat (z. B. Stiegenhaus) als Basis der Empfehlung.');
+    this._input(body, 'Referenztemperatur ohne Heizung (°C)', room.target_temp, set('target_temp'), 'number',
+      'Nur für Räume ohne Thermostat (z. B. Stiegenhaus). Leer = Standard aus „Fensterlogik“.');
     this._input(body, 'Icon (optional)', room.icon, set('icon'), 'text', 'z. B. mdi:bed');
     box.append(body);
     parent.append(box);

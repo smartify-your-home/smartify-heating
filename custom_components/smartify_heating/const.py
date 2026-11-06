@@ -38,6 +38,9 @@ DEFAULT_PARAMS = {
     "cooldown_min": 30,
     # Mindest-Haltezeit einer Empfehlung bei geschlossenem Fenster
     "hold_min": 5,
+    # Referenztemperatur für Räume ohne Heizung (nur Fensterempfehlung),
+    # wenn im Raum kein eigener Wert gesetzt ist
+    "target_without_heating": 20.0,
     # Fensterabschaltung (nur Modus Auto): Thermostat aus nach X s offen ...
     "shutdown_delay_s": 60,
     # ... und wieder ein nach X s alle Kontakte zu

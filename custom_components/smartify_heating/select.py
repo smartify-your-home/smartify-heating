@@ -14,7 +14,8 @@ from .entity import SmartifyHeatingEntity
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, add: AddEntitiesCallback) -> None:
     ctrl = hass.data[DOMAIN]["controller"]
     entities: list[SelectEntity] = [GlobalModeSelect(ctrl)]
-    entities += [RoomModeSelect(ctrl, room) for room in ctrl.data["rooms"]]
+    # Räume ohne Heizung (kein Thermostat) haben nur die Fensterempfehlung
+    entities += [RoomModeSelect(ctrl, room) for room in ctrl.data["rooms"] if room["climate"]]
     add(entities)
 
 

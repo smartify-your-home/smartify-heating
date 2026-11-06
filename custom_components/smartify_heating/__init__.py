@@ -159,7 +159,8 @@ async def ws_save(hass: HomeAssistant, connection, msg) -> None:
 def _remove_stale_entities(hass: HomeAssistant, entry: ConfigEntry, ctrl: HeatingController) -> None:
     valid = {f"{DOMAIN}_global_mode", f"{DOMAIN}_global_recommendation"}
     for r in ctrl.data["rooms"]:
-        valid.add(f"{DOMAIN}_{r['id']}_mode")
+        if r["climate"]:
+            valid.add(f"{DOMAIN}_{r['id']}_mode")
         if r["windows"]:
             valid.update({f"{DOMAIN}_{r['id']}_recommendation", f"{DOMAIN}_{r['id']}_window"})
     reg = er.async_get(hass)

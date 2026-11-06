@@ -21,6 +21,8 @@ CFG = {
         {"id": "bad", "name": "Bad", "slug": "bad", "climate": "climate.bad",
          "temperature_sensor": "sensor.bad_t", "windows": ["binary_sensor.bad_f1", "binary_sensor.bad_f2"]},
         {"id": "wz", "name": "Wohnzimmer", "climate": "climate.wz", "windows": []},
+        {"id": "sth", "name": "Stiegenhaus", "temperature_sensor": "sensor.sth_t",
+         "windows": ["binary_sensor.sth_f"]},
     ],
 }
 
@@ -39,6 +41,8 @@ def _states(hass, bad_t="23.2"):
     hass.states.async_set("sensor.aussen", "4.0")
     hass.states.async_set("binary_sensor.bad_f1", "off")
     hass.states.async_set("binary_sensor.bad_f2", "off")
+    hass.states.async_set("sensor.sth_t", "21.5")
+    hass.states.async_set("binary_sensor.sth_f", "off")
 
 
 async def test_full_flow(hass, hass_ws_client, hass_admin_user, freezer):
@@ -63,6 +67,11 @@ async def test_full_flow(hass, hass_ws_client, hass_admin_user, freezer):
     assert ents["rooms"]["bad"]["recommendation"] == "sensor.bad_fenster_empfehlung"
     assert ents["rooms"]["wz"]["recommendation"] is None  # ohne Kontakt keine Empfehlung
     assert hass.states.get("select.wohnzimmer_heizmodus").state == "global"
+    # Raum ohne Heizung: kein Modus, Empfehlung mit Standard-Referenz 20 °C
+    assert ents["rooms"]["sth"]["mode"] is None
+    await tick(hass, freezer, 20)
+    sth = hass.states.get("sensor.stiegenhaus_fenster_empfehlung")
+    assert sth.attributes["soll"] == 20.0 and sth.state == "oeffnen", sth
 
     # Öffnen-Empfehlung sofort nach Start (23,2 >= 22 + 1, außen 4)
     await tick(hass, freezer, 20)
@@ -103,6 +112,8 @@ async def test_full_flow(hass, hass_ws_client, hass_admin_user, freezer):
     await hass.async_block_till_done()
     offs = {c.data["entity_id"] for c in calls[n:] if c.data["hvac_mode"] == "off"}
     assert offs == {"climate.bad", "climate.wz"}
+    # Raum ohne Heizung bleibt von Modi unberührt, Empfehlung läuft weiter
+    assert hass.states.get("sensor.stiegenhaus_fenster_empfehlung").state == "oeffnen"
 
     # Raum entfernen -> Entitäten weg (neue Verbindung, freezer hat die alte gealtert)
     ws = await hass_ws_client(hass)
