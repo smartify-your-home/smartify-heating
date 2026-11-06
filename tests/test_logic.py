@@ -32,6 +32,10 @@ class Recommendation(unittest.TestCase):
         # Bisheriges Verhalten (Bad 23,5 / Soll 23) hat bereits Öffnen empfohlen – jetzt nicht mehr
         self.assertEqual(ev(inside=23.5, target=23.0).state, L.REC_NONE)
 
+    def test_below_setpoint_reason(self):
+        r = ev(inside=15.8, target=20.0)
+        self.assertEqual((r.state, r.reason), (L.REC_NONE, "zu_kalt"))
+
     def test_open_when_warm_and_cold_outside(self):
         r = ev(inside=23.1)
         self.assertEqual((r.state, r.reason), (L.REC_OPEN, "zu_warm"))

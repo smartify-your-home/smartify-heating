@@ -81,9 +81,14 @@ def evaluate(
         and excess >= p["open_above"] - hyst
         and delta >= p["open_min_delta"] - hyst
     )
-    new = Result(REC_OPEN, "zu_warm") if want_open else Result(
-        REC_NONE, "aussen_zu_warm" if delta is not None and excess >= p["open_above"] else "im_soll"
-    )
+    if want_open:
+        new = Result(REC_OPEN, "zu_warm")
+    elif excess >= p["open_above"]:
+        new = Result(REC_NONE, "aussen_zu_warm")
+    elif excess < 0:
+        new = Result(REC_NONE, "zu_kalt")
+    else:
+        new = Result(REC_NONE, "im_soll")
 
     # Mindest-Haltezeit nur zwischen oeffnen <-> keine_aktion bei geschlossenem Fenster
     hold = float(p.get("hold_min") or 0) * 60

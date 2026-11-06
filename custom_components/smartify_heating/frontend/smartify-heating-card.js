@@ -3,13 +3,14 @@
  * Fensterempfehlung. Logik läuft im Backend (custom_components/smartify_heating),
  * die Karte zeigt an und bedient.
  */
-const SHC_VERSION = '0.1.2';
+const SHC_VERSION = '0.1.3';
 
 const SHC_MODES_GLOBAL = [['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
 const SHC_MODES_ROOM = [['global', 'Global'], ['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
 const SHC_REASONS = {
   zu_warm: 'Raum zu warm, außen kühler',
   im_soll: 'Im Sollbereich',
+  zu_kalt: 'Unter Soll',
   aussen_zu_warm: 'Außen nicht kühl genug',
   soll_erreicht: 'Solltemperatur erreicht',
   lueftungsdauer: 'Maximale Lüftungsdauer erreicht',

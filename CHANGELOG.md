@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.3
+
+- Grund `zu_kalt` („Unter Soll“) statt „Im Sollbereich“, wenn der Raum unter Soll liegt
+
 ## v0.1.2
 
 - Behoben: blockierender Dateizugriff beim Start (Warnung „Detected blocking call to open“)

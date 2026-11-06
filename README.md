@@ -84,7 +84,7 @@ Basis: Raumtemperatur (Sensor oder Ist-Wert des Thermostats), Soll (Thermostat o
 - **Mehrere Kontakte:** Ein Raum gilt als offen, sobald ein Kontakt offen ist.
 - Räume ohne Kontakt bekommen keine Empfehlung.
 
-Der Grund steht in der Karte unter der Empfehlung und im Attribut `grund` (`zu_warm`, `im_soll`, `soll_erreicht`, `aussen_zu_warm`, `lueftungsdauer`, `lueften_ok`, `pause_nach_lueften`, `haltezeit`, `sensorwert_fehlt`).
+Der Grund steht in der Karte unter der Empfehlung und im Attribut `grund` (`zu_warm`, `im_soll`, `zu_kalt`, `soll_erreicht`, `aussen_zu_warm`, `lueftungsdauer`, `lueften_ok`, `pause_nach_lueften`, `haltezeit`, `sensorwert_fehlt`).
 
 ## Räume ohne Heizung
 
