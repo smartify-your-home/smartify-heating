@@ -1,3 +1,5 @@
+<p align="center"><img src="custom_components/smartify_heating/brand/logo.png" alt="smartify Heizung" width="420"></p>
+
 # smartify Heizung
 
 Home-Assistant-Integration mit eigener Karte für die Raumregelung:

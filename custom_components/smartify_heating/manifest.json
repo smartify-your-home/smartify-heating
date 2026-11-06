@@ -1,7 +1,7 @@
 {
   "domain": "smartify_heating",
   "name": "smartify Heizung",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "documentation": "https://github.com/smartify-your-home/smartify-heating",
   "issue_tracker": "https://github.com/smartify-your-home/smartify-heating/issues",
   "codeowners": [],

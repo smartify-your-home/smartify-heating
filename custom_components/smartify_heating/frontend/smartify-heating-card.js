@@ -3,7 +3,7 @@
  * Fensterempfehlung. Logik läuft im Backend (custom_components/smartify_heating),
  * die Karte zeigt an und bedient.
  */
-const SHC_VERSION = '0.1.0';
+const SHC_VERSION = '0.1.1';
 
 const SHC_MODES_GLOBAL = [['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
 const SHC_MODES_ROOM = [['global', 'Global'], ['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
