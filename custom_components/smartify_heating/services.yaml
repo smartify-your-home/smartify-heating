@@ -1,0 +1,7 @@
+set_config:
+  fields:
+    config:
+      required: true
+      example: '{"globals": {"outside_sensor": "sensor.aussen"}, "rooms": [{"name": "Bad", "climate": "climate.bad", "windows": ["binary_sensor.badfenster"]}]}'
+      selector:
+        object:

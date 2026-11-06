@@ -37,5 +37,17 @@
         }
       }
     }
+  },
+  "services": {
+    "set_config": {
+      "name": "Konfiguration setzen",
+      "description": "Ersetzt Räume, Allgemein und Fensterlogik (wie „Speichern“ im Karteneditor). Nur Administratoren.",
+      "fields": {
+        "config": {
+          "name": "Konfiguration",
+          "description": "Objekt mit rooms, globals, params (wie der JSON-Export)."
+        }
+      }
+    }
   }
 }

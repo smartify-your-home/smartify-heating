@@ -3,7 +3,7 @@
  * Fensterempfehlung. Logik läuft im Backend (custom_components/smartify_heating),
  * die Karte zeigt an und bedient.
  */
-const SHC_VERSION = '0.1.1';
+const SHC_VERSION = '0.1.2';
 
 const SHC_MODES_GLOBAL = [['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
 const SHC_MODES_ROOM = [['global', 'Global'], ['auto', 'Auto'], ['manual', 'Hand'], ['off', 'Aus']];
@@ -774,6 +774,9 @@ class SmartifyHeatingCardEditor extends HTMLElement {
       'Mehrere möglich. Offen, sobald ein Kontakt offen ist. Ohne Kontakt keine Fensterempfehlung.');
     this._input(body, 'Referenztemperatur ohne Heizung (°C)', room.target_temp, set('target_temp'), 'number',
       'Nur für Räume ohne Thermostat (z. B. Stiegenhaus). Leer = Standard aus „Fensterlogik“.');
+    this._entity(body, 'Referenz-Entität ohne Heizung (optional)', room.target_entity,
+      [{ domain: ['input_number', 'number', 'sensor'] }], set('target_entity'), false,
+      'Z. B. input_number.soll_stiegenhaus. Hat Vorrang vor der Referenztemperatur.');
     this._input(body, 'Icon (optional)', room.icon, set('icon'), 'text', 'z. B. mdi:bed');
     box.append(body);
     parent.append(box);

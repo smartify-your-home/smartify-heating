@@ -37,5 +37,17 @@
         }
       }
     }
+  },
+  "services": {
+    "set_config": {
+      "name": "Set configuration",
+      "description": "Replaces rooms, globals and window logic (like \"Save\" in the card editor). Admins only.",
+      "fields": {
+        "config": {
+          "name": "Configuration",
+          "description": "Object with rooms, globals, params (same as the JSON export)."
+        }
+      }
+    }
   }
 }

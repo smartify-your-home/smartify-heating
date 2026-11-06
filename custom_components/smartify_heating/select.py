@@ -26,7 +26,7 @@ class GlobalModeSelect(SmartifyHeatingEntity, SelectEntity):
 
     def __init__(self, ctrl) -> None:
         super().__init__(ctrl, None, "mode", "select", "heizung_modus")
-        self._attr_name = "Heizung Modus"
+        self._attr_name = "Modus"
 
     @property
     def current_option(self) -> str:
@@ -43,7 +43,7 @@ class RoomModeSelect(SmartifyHeatingEntity, SelectEntity):
 
     def __init__(self, ctrl, room) -> None:
         super().__init__(ctrl, room, "mode", "select", f"{room['slug']}_heizmodus")
-        self._attr_name = f"{room['name']} Heizmodus"
+        self._attr_name = "Heizmodus"
 
     @property
     def current_option(self) -> str:

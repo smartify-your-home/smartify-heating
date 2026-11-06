@@ -100,6 +100,7 @@ def normalize_config(data: dict | None) -> dict:
             "temperature_sensor": str(raw.get("temperature_sensor") or ""),
             "windows": list(dict.fromkeys(windows)),
             "target_temp": target,
+            "target_entity": str(raw.get("target_entity") or ""),
             "icon": str(raw.get("icon") or ""),
         })
 
@@ -173,7 +174,7 @@ class HeatingController:
         g = self.data["globals"]
         ids.update(x for x in (g["outside_sensor"], g["cooling_switch"]) if x)
         for room in self.data["rooms"]:
-            ids.update(x for x in (room["climate"], room["climate_cooling"], room["temperature_sensor"]) if x)
+            ids.update(x for x in (room["climate"], room["climate_cooling"], room["temperature_sensor"], room["target_entity"]) if x)
             ids.update(room["windows"])
         if ids:
             self._unsubs.append(async_track_state_change_event(self.hass, list(ids), self._on_state))
@@ -280,8 +281,10 @@ class HeatingController:
             inside = _float(self.hass, climate, "current_temperature")
         target = _float(self.hass, climate, "temperature") if climate else None
         if target is None and not climate:
-            # Raum ohne Heizung: eigener Referenzwert oder Standard aus der Fensterlogik
-            target = room["target_temp"] if room["target_temp"] is not None else self.data["params"]["target_without_heating"]
+            # Raum ohne Heizung: Referenz-Entität, eigener Wert oder Standard aus der Fensterlogik
+            target = _float(self.hass, room["target_entity"]) if room["target_entity"] else None
+            if target is None:
+                target = room["target_temp"] if room["target_temp"] is not None else self.data["params"]["target_without_heating"]
         return {
             "inside": inside,
             "target": target,

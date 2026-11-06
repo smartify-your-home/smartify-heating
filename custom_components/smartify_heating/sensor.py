@@ -31,7 +31,7 @@ class RoomRecommendation(SmartifyHeatingEntity, SensorEntity):
 
     def __init__(self, ctrl, room) -> None:
         super().__init__(ctrl, room, "recommendation", "sensor", f"{room['slug']}_fenster_empfehlung")
-        self._attr_name = f"{room['name']} Fenster Empfehlung"
+        self._attr_name = "Fenster Empfehlung"
 
     @property
     def _rt(self):

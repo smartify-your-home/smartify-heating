@@ -12,7 +12,8 @@ from .controller import HeatingController
 
 class SmartifyHeatingEntity(Entity):
     _attr_should_poll = False
-    _attr_has_entity_name = False
+    # Name = Gerätename + Entitätsname, z. B. "Bad" + "Heizmodus"
+    _attr_has_entity_name = True
 
     def __init__(self, ctrl: HeatingController, room: dict | None, key: str, platform: str, object_id: str) -> None:
         self.ctrl = ctrl
@@ -22,7 +23,7 @@ class SmartifyHeatingEntity(Entity):
         self.entity_id = f"{platform}.{object_id}"
         if room:
             self._attr_device_info = DeviceInfo(
-                identifiers={(DOMAIN, rid)}, name=f"Heizung {room['name']}",
+                identifiers={(DOMAIN, rid)}, name=room["name"],
                 manufacturer="smartify", model="Raum", via_device=(DOMAIN, "global"),
             )
         else:

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.2
+
+- Behoben: blockierender Dateizugriff beim Start (Warnung „Detected blocking call to open“)
+- Entitätsnamen über Geräte: „Bad Heizmodus“ statt „smartify Heizung … “
+- Räume ohne Heizung: optionale Referenz-Entität (z. B. `input_number`)
+- Neuer Dienst `smartify_heating.set_config` zum Setzen/Importieren der Konfiguration (Admin)
+
 ## v0.1.1
 
 - Eigenes Icon und Logo (Ordner `brand/`, hell und dunkel) – wird ab Home Assistant 2026.3 angezeigt

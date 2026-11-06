@@ -19,6 +19,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.service import async_register_admin_service
+from homeassistant.core import ServiceCall
 
 from .const import DOMAIN, RESOURCE_PATH
 from .controller import HeatingController
@@ -29,9 +31,14 @@ CARD_FILE = Path(__file__).parent / "frontend" / "smartify-heating-card.js"
 PLATFORMS = ["select", "sensor", "binary_sensor"]
 
 
+# Beim Import lesen: HA importiert Custom-Integrationen im Executor, nicht im Event-Loop
+with (Path(__file__).parent / "manifest.json").open(encoding="utf-8") as _file:
+    VERSION: str = json.load(_file)["version"]
+CARD_FILE_EXISTS = CARD_FILE.is_file()
+
+
 def _card_version() -> str:
-    with (Path(__file__).parent / "manifest.json").open(encoding="utf-8") as file:
-        return json.load(file)["version"]
+    return VERSION
 
 
 def _is_own_resource(url: str) -> bool:
@@ -170,7 +177,7 @@ def _remove_stale_entities(hass: HomeAssistant, entry: ConfigEntry, ctrl: Heatin
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    if not CARD_FILE.is_file():
+    if not CARD_FILE_EXISTS:
         _LOGGER.error("Card-JavaScript fehlt: %s", CARD_FILE)
         return False
     version = _card_version()
@@ -181,6 +188,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         websocket_api.async_register_command(hass, ws_get)
         websocket_api.async_register_command(hass, ws_save)
+
+        async def _svc_set_config(call: ServiceCall) -> None:
+            st = hass.data.get(DOMAIN, {})
+            if st.get("controller") is None:
+                return
+            await st["controller"].async_replace_config(call.data["config"])
+            await hass.config_entries.async_reload(st["entry_id"])
+
+        async_register_admin_service(
+            hass, DOMAIN, "set_config", _svc_set_config,
+            vol.Schema({vol.Required("config"): dict}),
+        )
         state["static_registered"] = True
 
     ctrl = HeatingController(hass)

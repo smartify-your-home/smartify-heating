@@ -93,7 +93,7 @@ Bleibt beim Raum das Feld **Thermostat** leer, ist es ein Raum ohne Heizung (z. 
 - nur Fensterempfehlung und Fensterkontakte
 - kein Raummodus, keine Sollwert-Bedienung, keine Fensterabschaltung
 - Gesamtmodus Aus wirkt nicht auf die Empfehlung
-- Bezugswert ist die **Referenztemperatur** des Raums. Ist sie leer, gilt der Standard aus *Fensterlogik* (20 °C). Die Karte zeigt ihn als „Ref.“.
+- Bezugswert ist die **Referenz-Entität** (z. B. `input_number`), sonst die **Referenztemperatur** des Raums. Ist sie leer, gilt der Standard aus *Fensterlogik* (20 °C). Die Karte zeigt ihn als „Ref.“.
 
 ## Editor
 
@@ -139,6 +139,22 @@ actions:
   - action: notify.notify
     data:
       message: "Fenster schließen: {{ state_attr('sensor.fenster_empfehlung_gesamt', 'schliessen') | join(', ') }}"
+```
+
+## Dienst `smartify_heating.set_config`
+
+Setzt die Konfiguration wie „Speichern“ im Editor (nur Administratoren). `config` hat dasselbe Format wie der JSON-Export.
+
+```yaml
+action: smartify_heating.set_config
+data:
+  config:
+    globals:
+      outside_sensor: sensor.aussentemperatur
+    rooms:
+      - name: Bad
+        climate: climate.thermostat_bad
+        windows: [binary_sensor.badfenster]
 ```
 
 ## Kartenoptionen (YAML)

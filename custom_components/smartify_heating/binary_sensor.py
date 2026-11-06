@@ -21,7 +21,7 @@ class RoomWindow(SmartifyHeatingEntity, BinarySensorEntity):
 
     def __init__(self, ctrl, room) -> None:
         super().__init__(ctrl, room, "window", "binary_sensor", f"{room['slug']}_fenster_offen")
-        self._attr_name = f"{room['name']} Fenster offen"
+        self._attr_name = "Fenster offen"
 
     @property
     def is_on(self) -> bool | None:

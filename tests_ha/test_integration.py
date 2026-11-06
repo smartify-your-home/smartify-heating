@@ -22,7 +22,7 @@ CFG = {
          "temperature_sensor": "sensor.bad_t", "windows": ["binary_sensor.bad_f1", "binary_sensor.bad_f2"]},
         {"id": "wz", "name": "Wohnzimmer", "climate": "climate.wz", "windows": []},
         {"id": "sth", "name": "Stiegenhaus", "temperature_sensor": "sensor.sth_t",
-         "windows": ["binary_sensor.sth_f"]},
+         "windows": ["binary_sensor.sth_f"], "target_entity": "input_number.soll_sth"},
     ],
 }
 
@@ -42,6 +42,7 @@ def _states(hass, bad_t="23.2"):
     hass.states.async_set("binary_sensor.bad_f1", "off")
     hass.states.async_set("binary_sensor.bad_f2", "off")
     hass.states.async_set("sensor.sth_t", "21.5")
+    hass.states.async_set("input_number.soll_sth", "19.0")
     hass.states.async_set("binary_sensor.sth_f", "off")
 
 
@@ -71,7 +72,9 @@ async def test_full_flow(hass, hass_ws_client, hass_admin_user, freezer):
     assert ents["rooms"]["sth"]["mode"] is None
     await tick(hass, freezer, 20)
     sth = hass.states.get("sensor.stiegenhaus_fenster_empfehlung")
-    assert sth.attributes["soll"] == 20.0 and sth.state == "oeffnen", sth
+    assert sth.attributes["soll"] == 19.0 and sth.state == "oeffnen", sth
+    assert hass.states.get("select.bad_heizmodus").attributes["friendly_name"] == "Bad Heizmodus"
+    assert hass.states.get("select.heizung_modus").attributes["friendly_name"] == "smartify Heizung Modus"
 
     # Öffnen-Empfehlung sofort nach Start (23,2 >= 22 + 1, außen 4)
     await tick(hass, freezer, 20)
@@ -121,6 +124,11 @@ async def test_full_flow(hass, hass_ws_client, hass_admin_user, freezer):
     assert (await ws.receive_json())["success"]
     await hass.async_block_till_done()
     assert hass.states.get("select.wohnzimmer_heizmodus") is None
+
+    # Dienst set_config
+    await hass.services.async_call(DOMAIN, "set_config", {"config": CFG}, blocking=True)
+    await hass.async_block_till_done()
+    assert hass.states.get("select.wohnzimmer_heizmodus") is not None
 
     # Ressource registriert
     await ws.send_json({"id": 3, "type": "lovelace/resources"})
