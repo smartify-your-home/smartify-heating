@@ -174,3 +174,7 @@ PYTHONPATH=. python -m pytest tests_ha --asyncio-mode=auto   # Integration mit H
 ```
 
 Die Screenshots zeigen Testdaten.
+
+## Lizenz
+
+MIT – siehe [LICENSE](LICENSE).
