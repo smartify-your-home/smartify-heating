@@ -1,4 +1,4 @@
-<p align="center"><img src="custom_components/smartify_heating/brand/logo.png" alt="smartify Heizung" width="420"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/custom_components/smartify_heating/brand/logo.png" alt="smartify Heizung" width="420"></p>
 
 # smartify Heizung
 
@@ -11,7 +11,7 @@ Home-Assistant-Integration mit eigener Karte für die Raumregelung:
 - **Räume ohne Heizung** (z. B. Stiegenhaus): nur Fensterempfehlung
 - Karte im smartify-Stil mit **einklappbaren Räumen** und einem Editor mit einklappbaren Bereichen
 
-![Übersicht](docs/images/overview.png)
+![Übersicht](https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/overview.png)
 
 Die Logik läuft im Backend, also auch ohne geöffnetes Dashboard. Die Integration liefert die Karte selbst aus und registriert die Lovelace-Ressource automatisch; nichts muss nach `www/` kopiert werden.
 
@@ -43,12 +43,12 @@ Jeder Raum zeigt Temperaturverlauf, Ist-/Sollwert mit Bedienung, Raummodus, Fens
 
 Räume lassen sich per Klick auf den Kopf **einklappen**. Der Zustand wird je Browser gemerkt. Im eingeklappten Zustand bleiben Ist/Soll, Heizbetrieb, Modus, ein offenes Fenster und die Empfehlung (als Punkt) sichtbar:
 
-![Eingeklappt](docs/images/collapsed.png)
+![Eingeklappt](https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/collapsed.png)
 
 <table>
 <tr>
-<td width="36%"><img src="docs/images/mobile.png" alt="Smartphone"></td>
-<td><img src="docs/images/overview-dark.png" alt="Dunkles Theme"></td>
+<td width="36%"><img src="https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/mobile.png" alt="Smartphone"></td>
+<td><img src="https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/overview-dark.png" alt="Dunkles Theme"></td>
 </tr>
 <tr><td align="center">Smartphone</td><td align="center">Dunkles Theme</td></tr>
 </table>
@@ -101,8 +101,8 @@ Alle Bereiche sind einklappbar. **Darstellung** gilt nur für diese Karte. **Rä
 
 <table>
 <tr>
-<td width="50%"><img src="docs/images/editor-rooms.png" alt="Editor Räume"></td>
-<td width="50%"><img src="docs/images/editor-logic.png" alt="Editor Fensterlogik"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/editor-rooms.png" alt="Editor Räume"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/smartify-your-home/smartify-heating/main/docs/images/editor-logic.png" alt="Editor Fensterlogik"></td>
 </tr>
 <tr><td align="center">Räume</td><td align="center">Fensterlogik</td></tr>
 </table>
