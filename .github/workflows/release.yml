@@ -1,0 +1,52 @@
+name: Publish versioned release
+on:
+  push:
+    branches: [main]
+    paths:
+      - custom_components/smartify_heating/manifest.json
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: heating-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Tests
+        run: |
+          python scripts/check_version.py
+          python -m unittest discover -s tests -v
+          node --check custom_components/smartify_heating/frontend/smartify-heating-card.js
+          node tests/test_card.cjs
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(python scripts/check_version.py | sed -n 's/^Version metadata consistent: //p')
+          tag="v${version}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $tag existiert bereits."; exit 0
+          fi
+          python - "$version" <<'PY'
+          import pathlib, re, sys
+          v = re.escape(sys.argv[1])
+          log = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+          m = re.search(rf"(?ms)^##\s+v?{v}(?:\s|$)(.*?)(?=^##\s+|\Z)", log)
+          if not m:
+              raise SystemExit("Release-Notes fehlen")
+          pathlib.Path("/tmp/notes.md").write_text(m.group(1).strip() + "\n", encoding="utf-8")
+          PY
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$tag" --notes-file /tmp/notes.md

@@ -1,0 +1,43 @@
+name: Validate integration
+on:
+  push:
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Version
+        run: python scripts/check_version.py
+      - name: Python
+        run: |
+          python -m compileall -q custom_components
+          python -m unittest discover -s tests -v
+      - name: JavaScript
+        run: |
+          node --check custom_components/smartify_heating/frontend/smartify-heating-card.js
+          node tests/test_card.cjs
+  ha-core:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Integrationstest mit HA-Core
+        run: |
+          pip install pytest-homeassistant-custom-component pytest-asyncio
+          PYTHONPATH=. python -m pytest tests_ha -q --asyncio-mode=auto
+  hacs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: integration
+          ignore: brands topics

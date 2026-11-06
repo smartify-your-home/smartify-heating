@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "smartify Heizung",
+        "description": "Räume, Fensterkontakte und Schwellen werden im Editor der Karte „smartify Heizung“ gepflegt."
+      }
+    },
+    "abort": {
+      "already_configured": "Bereits eingerichtet"
+    }
+  },
+  "entity": {
+    "select": {
+      "global_mode": {
+        "state": {
+          "auto": "Auto",
+          "manual": "Hand",
+          "off": "Aus"
+        }
+      },
+      "room_mode": {
+        "state": {
+          "global": "Global",
+          "auto": "Auto",
+          "manual": "Hand",
+          "off": "Aus"
+        }
+      }
+    },
+    "sensor": {
+      "recommendation": {
+        "state": {
+          "oeffnen": "Öffnen",
+          "schliessen": "Schließen",
+          "keine_aktion": "Keine Aktion"
+        }
+      }
+    }
+  }
+}

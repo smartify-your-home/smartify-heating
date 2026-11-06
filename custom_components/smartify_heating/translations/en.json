@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "smartify Heizung",
+        "description": "Rooms, window contacts and thresholds are configured in the card editor."
+      }
+    },
+    "abort": {
+      "already_configured": "Already configured"
+    }
+  },
+  "entity": {
+    "select": {
+      "global_mode": {
+        "state": {
+          "auto": "Auto",
+          "manual": "Manual",
+          "off": "Off"
+        }
+      },
+      "room_mode": {
+        "state": {
+          "global": "Follow global",
+          "auto": "Auto",
+          "manual": "Manual",
+          "off": "Off"
+        }
+      }
+    },
+    "sensor": {
+      "recommendation": {
+        "state": {
+          "oeffnen": "Open",
+          "schliessen": "Close",
+          "keine_aktion": "No action"
+        }
+      }
+    }
+  }
+}
